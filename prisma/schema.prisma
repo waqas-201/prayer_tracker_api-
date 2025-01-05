@@ -1,0 +1,91 @@
+// Database connection configuration
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+
+// User authentication and basic information
+model User {
+
+  id             String    @id @default(cuid())
+  email          String    @unique
+  password       String?   // Nullable for OAuth users
+  emailVerified  Boolean   @default(false)
+  googleId       String?   @unique
+  profile        Profile?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+
+// Detailed user profile
+model Profile {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  username     String?
+  Prayer       Prayer[]
+  gender       Gender       
+  givenName    String?
+  familyName   String?
+  picture      String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+
+// Individual prayer tracking
+model Prayer {
+  id           String        @id @default(cuid())
+  prayerType   PrayerType
+  status       PrayerStatus
+  performedAt  DateTime?
+  notes        String?
+  profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId    String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+
+  // Indexes for query optimization
+  @@index([prayerType])
+  @@index([status])
+}
+
+
+// Prayer types in Islamic religion
+enum PrayerType {
+  FAJR
+  DHUHR
+  ASR
+  MAGHRIB
+  ISHA
+}
+
+// Possible prayer completion statuses
+enum PrayerStatus {
+  MISSED
+  COMPLETED
+}
+
+enum Gender {
+  MEN
+  WOMEN
+  OTHER
+}
+
+model BlacklistToken  {
+  
+  userId       String    @unique
+  token        String    @unique
+  expiredAt    DateTime  @default(now())
+}
