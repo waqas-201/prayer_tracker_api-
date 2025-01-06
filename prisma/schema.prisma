@@ -12,7 +12,6 @@ generator dbml {
   provider = "prisma-dbml-generator"
 }
 
-
 // User authentication and basic information
 model User {
 
@@ -27,40 +26,84 @@ model User {
 }
 
 
-// Detailed user profile
-model Profile {
-  id           String       @id @default(cuid())
-  userId       String       @unique
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  username     String?
-  Prayer       Prayer[]
-  gender       Gender       
-  givenName    String?
-  familyName   String?
-  picture      String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  // Detailed user profile
+  model Profile {
+    id           String       @id @default(cuid())
+    userId       String       @unique
+    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    username     String?
+    prayers      Prayer[]
+    prayerTimings PrayerTimings?
+    gender       Gender     
+    latitude     Float
+    longitude    Float
+    givenName    String?
+    familyName   String?
+    picture      String?
+    createdAt    DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+  }
+
+
+model PrayerTimings {
+  id       String   @id @default(cuid())
+  fajr     DateTime
+  dhuhr    DateTime
+  asr      DateTime
+  maghrib  DateTime
+  isha     DateTime
+  sunrise  DateTime
+  sunset   DateTime
+  imsak    DateTime
+  midnight DateTime
+  profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId    String        @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-
-// Individual prayer tracking
 model Prayer {
   id           String        @id @default(cuid())
   prayerType   PrayerType
-  status       PrayerStatus
-  performedAt  DateTime?
+  menStatus    MenPrayerStatus?  // Optional field for men's specific prayer statuses
+  womenStatus  WomenPrayerStatus? // Optional field for women's specific prayer statuses
+  performedAt  DateTime
   notes        String?
   profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId    String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-
+  prayerTime   DateTime      // Tracks the prayer time
+  notifiedAt   DateTime?     // Tracks when the user was notified
 
   // Indexes for query optimization
   @@index([prayerType])
-  @@index([status])
+  @@index([menStatus])
+  @@index([womenStatus])
 }
 
+// Possible prayer completion statuses for MEN
+enum MenPrayerStatus {
+  TAKBEERE_E_ULA 
+  SALATAL_JAMAAH 
+  INDIVIDUAL_PRAYER
+  MISSED
+}
+
+// Possible prayer completion statuses for WOMEN
+enum WomenPrayerStatus {
+  PRAYED_AT_TIME
+  PRAYED_LATE
+  PRAYED_TOO_LATE
+  MISSED
+}
+
+// Gender options
+enum Gender {
+  MEN
+  WOMEN
+  OTHER
+}
 
 // Prayer types in Islamic religion
 enum PrayerType {
@@ -71,21 +114,4 @@ enum PrayerType {
   ISHA
 }
 
-// Possible prayer completion statuses
-enum PrayerStatus {
-  MISSED
-  COMPLETED
-}
 
-enum Gender {
-  MEN
-  WOMEN
-  OTHER
-}
-
-model BlacklistToken  {
-  
-  userId       String    @unique
-  token        String    @unique
-  expiredAt    DateTime  @default(now())
-}

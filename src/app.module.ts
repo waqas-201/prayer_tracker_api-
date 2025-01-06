@@ -14,6 +14,7 @@ import { HstsMiddleware } from './middlewares/hsts.middleware';
 import { JwtAuthGuard } from './auth/guards/jwt.auth.guard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TokenBlacklistProvider } from './auth/providers/token.blacklisting.provider';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TokenBlacklistProvider } from './auth/providers/token.blacklisting.prov
     }),
     AuthModule,
     NotificationsModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [

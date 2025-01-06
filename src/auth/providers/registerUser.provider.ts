@@ -52,13 +52,15 @@ export class RegisterUserProvider {
       // if user is created successfully then  send email to user for email varification
       // send user verification email
 
+    const result =
       await this.sendVerificationEmailProvider.sendUserVerificationEmail(
         savedUser.id,
         req,
         'v1/auth/verify-email',
         this.configService.get<string>('EMAIL_VERIFICATION_TOKEN_SECRET'),
       );
-
+    console.log(result);
+        
       return {
         message: 'user created successfully',
       };

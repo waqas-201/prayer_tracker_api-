@@ -18,8 +18,11 @@ Table Profile {
   userId String [unique, not null]
   user User [not null]
   username String
-  Prayer Prayer [not null]
+  prayers Prayer [not null]
+  prayerTimings PrayerTimings
   gender Gender [not null]
+  latitude Float [not null]
+  longitude Float [not null]
   givenName String
   familyName String
   picture String
@@ -27,16 +30,56 @@ Table Profile {
   updatedAt DateTime [not null]
 }
 
+Table PrayerTimings {
+  id String [pk]
+  fajr DateTime [not null]
+  dhuhr DateTime [not null]
+  asr DateTime [not null]
+  maghrib DateTime [not null]
+  isha DateTime [not null]
+  sunrise DateTime [not null]
+  sunset DateTime [not null]
+  imsak DateTime [not null]
+  midnight DateTime [not null]
+  profile Profile [not null]
+  profileId String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Table Prayer {
   id String [pk]
   prayerType PrayerType [not null]
-  status PrayerStatus [not null]
-  performedAt DateTime
+  menStatus MenPrayerStatus
+  womenStatus WomenPrayerStatus
+  performedAt DateTime [not null]
   notes String
   profile Profile [not null]
   profileId String [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  prayerTime DateTime [not null]
+  notifiedAt DateTime
+}
+
+Enum MenPrayerStatus {
+  TAKBEERE_E_ULA
+  SALATAL_JAMAAH
+  INDIVIDUAL_PRAYER
+  MISSED
+}
+
+Enum WomenPrayerStatus {
+  PRAYED_AT_TIME
+  PRAYED_LATE
+  PRAYED_TOO_LATE
+  MISSED
+}
+
+Enum Gender {
+  MEN
+  WOMEN
+  OTHER
 }
 
 Enum PrayerType {
@@ -47,17 +90,8 @@ Enum PrayerType {
   ISHA
 }
 
-Enum PrayerStatus {
-  MISSED
-  COMPLETED
-}
-
-Enum Gender {
-  MEN
-  WOMEN
-  OTHER
-}
-
 Ref: Profile.userId - User.id [delete: Cascade]
+
+Ref: PrayerTimings.profileId - Profile.id [delete: Cascade]
 
 Ref: Prayer.profileId > Profile.id [delete: Cascade]
