@@ -60,8 +60,8 @@ export class AuthService {
     );
   }
 
-  async logout(req: Request) {
-    return await this.logoutProvider.logout(req);
+  async logout(req: Request, res: Response) {
+    return await this.logoutProvider.logout(req, res);
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto, req: Request) {

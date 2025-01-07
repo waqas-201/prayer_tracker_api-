@@ -15,6 +15,7 @@ import { JwtAuthGuard } from './auth/guards/jwt.auth.guard';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TokenBlacklistProvider } from './auth/providers/token.blacklisting.provider';
 import { ProfileModule } from './profile/profile.module';
+import { PrayertimingsModule } from './prayertimings/prayertimings.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ProfileModule } from './profile/profile.module';
     AuthModule,
     NotificationsModule,
     ProfileModule,
+    PrayertimingsModule,
   ],
   controllers: [AppController],
   providers: [

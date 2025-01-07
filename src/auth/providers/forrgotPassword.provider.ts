@@ -29,7 +29,7 @@ export class ForgotPasswordProvider {
       await this.sendVerificationEmailProvider.sendUserVerificationEmail(
         user.id,
         req,
-        'v1/auth/forget-password',
+        'api/v1/auth/forget-password',
         this.configService.get<string>('PASSWORD_RESET_TOKEN_SECRET'),
       );
 

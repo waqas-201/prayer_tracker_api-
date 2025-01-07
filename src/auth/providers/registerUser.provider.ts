@@ -55,7 +55,7 @@ export class RegisterUserProvider {
         await this.sendVerificationEmailProvider.sendUserVerificationEmail(
           savedUser.id,
           req,
-          'v1/auth/verify-email',
+          'api/v1/auth/verify-email',
           this.configService.get<string>('EMAIL_VERIFICATION_TOKEN_SECRET'),
         );
 

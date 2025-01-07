@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register.dto';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
 import { LoginUserDto } from './dto/loginUser';
@@ -67,8 +67,8 @@ export class AuthController {
 
   @Version('1')
   @Get('/logout')
-  async logout(@Req() req: Request) {
-    return await this.authService.logout(req);
+  async logout(@Req() req: Request, @Res() res: Response) {
+    return await this.authService.logout(req, res);
   }
 
   @IsPublic()

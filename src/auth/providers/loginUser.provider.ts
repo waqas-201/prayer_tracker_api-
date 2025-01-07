@@ -53,10 +53,10 @@ export class LoginUserProvider {
         throw new UnauthorizedException('Invalid credentials');
       }
       //if password is correct generate access and refresh tokens and return those tokens in responce
-
+      
       const [accessToken, refreshToken] =
         await this.tokenProvider.generateTokens(user);
-
+      
       if (client_type === 'web') {
         res.cookie('access_token', accessToken, {
           httpOnly: true, //it will be accessible only by the web server not by javascript on client side via document.cookie

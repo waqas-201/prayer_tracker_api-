@@ -94,7 +94,6 @@ export class RefreshTokenProvider {
       return { accessToken, refreshToken };
       // 4 and add this refresh token to blackilist
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

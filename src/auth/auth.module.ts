@@ -3,6 +3,7 @@ import {
   MiddlewareConsumer,
   Module,
   NestModule,
+  RequestMethod,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
@@ -56,8 +57,15 @@ import { ResetPasswordProvider } from './providers/resetPassword.provider';
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(ClientTypeMiddleware)
-      .forRoutes('auth/login', 'auth/refresh');
+    consumer.apply(ClientTypeMiddleware).forRoutes(
+      {
+        path: '*auth/login',
+        method: RequestMethod.POST, // Optional: Only for POST requests
+      },
+      {
+        path: '*auth/refresh',
+        method: RequestMethod.POST, // Optional: Only for POST requests
+      },
+    );
   }
 }

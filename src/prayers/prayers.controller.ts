@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Version,
+  Req,
 } from '@nestjs/common';
 import { PrayersService } from './prayers.service';
 import { CreatePrayerDto } from './dto/create-prayer.dto';
 import { UpdatePrayerDto } from './dto/update-prayer.dto';
 import { Throttle } from '@nestjs/throttler';
+import { Request } from 'express';
 
 const short = {
   default: { limit: 13, ttl: 60000 },
@@ -23,10 +26,10 @@ export class PrayersController {
   create(@Body() createPrayerDto: CreatePrayerDto) {
     return createPrayerDto;
   }
-
+  @Version('1')
   @Get()
-  findAll() {
-    return this.prayersService.findAll();
+  findAll(@Req() req: Request) {
+    console.log(req.user);
   }
 
   @Get(':id')
