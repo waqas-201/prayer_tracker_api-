@@ -22,6 +22,8 @@ import { RefreshTokenProvider } from './providers/refresh.token.provider';
 import { TokenBlacklistProvider } from './providers/token.blacklisting.provider';
 import { LogoutProvider } from './providers/logout.provider';
 import { ForgotPasswordProvider } from './providers/forrgotPassword.provider';
+import { forgetPasswordVerifyProvider } from './providers/forgetPasswordVerify.provider';
+import { ResetPasswordProvider } from './providers/resetPassword.provider';
 
 @Module({
   controllers: [AuthController],
@@ -39,6 +41,8 @@ import { ForgotPasswordProvider } from './providers/forrgotPassword.provider';
     JwtService,
     LogoutProvider,
     ForgotPasswordProvider,
+    forgetPasswordVerifyProvider,
+    ResetPasswordProvider,
   ],
   imports: [
     forwardRef(() => NotificationsModule),

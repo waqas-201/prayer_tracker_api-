@@ -10,6 +10,10 @@ import { RefreshTokenProvider } from './providers/refresh.token.provider';
 import { LogoutProvider } from './providers/logout.provider';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ForgotPasswordProvider } from './providers/forrgotPassword.provider';
+import { ForgetPasswordVerifyDto } from './dto/ForgetPasswordVerify.Dto';
+import { forgetPasswordVerifyProvider } from './providers/forgetPasswordVerify.provider';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { ResetPasswordProvider } from './providers/resetPassword.provider';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +24,8 @@ export class AuthService {
     private readonly refreshTokenProvider: RefreshTokenProvider,
     private readonly logoutProvider: LogoutProvider,
     private readonly forgotPasswordProvider: ForgotPasswordProvider,
+    private readonly forgetPasswordVerifyProvider: forgetPasswordVerifyProvider,
+    private readonly resetPasswordProvider: ResetPasswordProvider,
   ) {}
 
   async registerUser(registerUserDto: RegisterUserDto, req: Request) {
@@ -58,7 +64,20 @@ export class AuthService {
     return await this.logoutProvider.logout(req);
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-    return await this.forgotPasswordProvider.forgotPassword(forgotPasswordDto);
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto, req: Request) {
+    return await this.forgotPasswordProvider.forgotPassword(
+      forgotPasswordDto,
+      req,
+    );
+  }
+
+  async forgetPasswordVerify(forgetPasswordVerifyDto: ForgetPasswordVerifyDto) {
+    return await this.forgetPasswordVerifyProvider.forgetPasswordVerify(
+      forgetPasswordVerifyDto,
+    );
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    return await this.resetPasswordProvider.resetPassword(resetPasswordDto);
   }
 }

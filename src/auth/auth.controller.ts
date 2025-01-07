@@ -8,7 +8,6 @@ import {
   Query,
   Headers,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register.dto';
@@ -16,17 +15,17 @@ import { Throttle } from '@nestjs/throttler';
 import { Request, Response } from 'express';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
 import { LoginUserDto } from './dto/loginUser';
-import { JwtAuthGuard } from './guards/jwt.auth.guard';
 import { IsPublic } from './decorators/isPublic';
 import { short } from './constents/throttle_config';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
+@Throttle({ ...short })
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Throttle({ ...short })
   @IsPublic()
   @Version('1')
   @Post('/register')
@@ -44,7 +43,6 @@ export class AuthController {
     return await this.authService.verifyEmail(query.token);
   }
 
-  @Throttle({ ...short })
   @IsPublic()
   @Version('1')
   @Post('/login')
@@ -73,16 +71,27 @@ export class AuthController {
     return await this.authService.logout(req);
   }
 
+  @IsPublic()
   @Version('1')
-  @Get('/proctacted')
-  async getPrctacted() {
-    return 'pratcted';
+  @Post('/forget-password')
+  async forgetPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+    @Req() req: Request,
+  ) {
+    return await this.authService.forgotPassword(forgotPasswordDto, req);
   }
 
-  @Version('1')
   @IsPublic()
-  @Post('forgot-password')
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    return await this.authService.forgotPassword(forgotPasswordDto);
+  @Version('1')
+  @Get('/forget-password')
+  async forgetPasswordVerify(@Query() query: VerifyEmailDto) {
+    return await this.authService.forgetPasswordVerify(query);
+  }
+
+  @IsPublic()
+  @Version('1')
+  @Post('/reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return await this.authService.resetPassword(resetPasswordDto);
   }
 }

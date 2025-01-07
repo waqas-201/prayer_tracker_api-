@@ -37,6 +37,7 @@ export class SendVerificationEmailProvider {
       const protocol = req.protocol; // 'http' or 'https'
       const host = req.get('host');
       const verificationLink = `${protocol}://${host}/${endPoint}?token=${verificationToken}`;
+      console.log(verificationLink);
 
       const text = `
           <h1>Welcome to the Prayer Tracker</h1>

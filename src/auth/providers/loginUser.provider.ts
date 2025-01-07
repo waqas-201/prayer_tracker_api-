@@ -1,11 +1,15 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { LoginUserDto } from '../dto/loginUser';
 import { PrismaService } from 'src/prismaModule/prisma.service';
 import * as argon2 from 'argon2';
 import { TokenProvider } from './token.provider';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-
 
 @Injectable()
 export class LoginUserProvider {
@@ -28,9 +32,8 @@ export class LoginUserProvider {
       });
 
       if (!user) {
-        throw new InternalServerErrorException('User does not exist');
+        throw new UnauthorizedException('User does not exist');
       }
-
 
       const isEmailVerified = await this.prismaSrvice.user.findUnique({
         where: {
@@ -39,7 +42,7 @@ export class LoginUserProvider {
         },
       });
       if (!isEmailVerified) {
-        throw new InternalServerErrorException('Email not verified');
+        throw new ForbiddenException('Email not verified');
       }
       //if user exits, grab user password and compare with password
       const isPasswordCorrect = await argon2.verify(
@@ -47,7 +50,7 @@ export class LoginUserProvider {
         loginUserDto.password,
       );
       if (!isPasswordCorrect) {
-        throw new InternalServerErrorException('Invalid credentials');
+        throw new UnauthorizedException('Invalid credentials');
       }
       //if password is correct generate access and refresh tokens and return those tokens in responce
 

@@ -3,6 +3,7 @@ import { ForgotPasswordDto } from '../dto/forgotPassword.dto';
 import { PrismaService } from 'src/prismaModule/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { SendVerificationEmailProvider } from 'src/notifications/providers/SendVerificationEmailProvider';
+import { Request } from 'express';
 
 @Injectable()
 export class ForgotPasswordProvider {
@@ -11,7 +12,8 @@ export class ForgotPasswordProvider {
     private readonly configService: ConfigService,
     private readonly sendVerificationEmailProvider: SendVerificationEmailProvider,
   ) {}
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto, req: Request) {
     try {
       //check if email exists
       const user = await this.prismaService.user.findFirst({
@@ -24,6 +26,12 @@ export class ForgotPasswordProvider {
       }
 
       //send email
+      await this.sendVerificationEmailProvider.sendUserVerificationEmail(
+        user.id,
+        req,
+        'v1/auth/forget-password',
+        this.configService.get<string>('PASSWORD_RESET_TOKEN_SECRET'),
+      );
 
       //return success
     } catch (error) {}

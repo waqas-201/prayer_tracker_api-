@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ResendService } from 'nestjs-resend';
 
 @Injectable()
@@ -14,7 +14,10 @@ export class NotificationProvider {
         text: text,
       });
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(
+        'Failed to send email',
+        error.message,
+      );
     }
   }
 }
