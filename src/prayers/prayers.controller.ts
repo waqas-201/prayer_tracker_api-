@@ -12,21 +12,22 @@ import {
 import { PrayersService } from './prayers.service';
 import { CreatePrayerDto } from './dto/create-prayer.dto';
 import { UpdatePrayerDto } from './dto/update-prayer.dto';
-import { Throttle } from '@nestjs/throttler';
 import { Request } from 'express';
+import { CurrentUser } from 'src/decorators/currentUser';
 
-const short = {
-  default: { limit: 13, ttl: 60000 },
-};
 @Controller('prayers')
 export class PrayersController {
   constructor(private readonly prayersService: PrayersService) {}
-  @Throttle({ ...short })
-  @Post()
-  create(@Body() createPrayerDto: CreatePrayerDto) {
-    return createPrayerDto;
-  }
+
   @Version('1')
+  @Post()
+  async create(
+    @Body() createPrayerDto: CreatePrayerDto,
+    @CurrentUser() user: any,
+  ) {
+    return await this.prayersService.create(createPrayerDto, user);
+  }
+
   @Get()
   findAll(@Req() req: Request) {
     console.log(req.user);

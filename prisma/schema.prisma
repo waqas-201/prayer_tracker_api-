@@ -29,20 +29,20 @@ model User {
 
   // Detailed user profile
   model Profile {
-    id           String       @id @default(cuid())
-    userId       String       @unique
-    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-    username     String?
-    prayers      Prayer[]
-    prayerTimings PrayerTimings?
-    gender       Gender     
-    latitude     Float
-    longitude    Float
-    givenName    String?
-    familyName   String?
-    picture      String?
-    createdAt    DateTime     @default(now())
-    updatedAt    DateTime     @updatedAt
+    id             String       @id @default(cuid())
+    userId         String       @unique
+    user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    username       String?
+    prayers        Prayer[]
+    prayerTimings  PrayerTimings?
+    gender         Gender     
+    latitude       Float
+    longitude      Float
+    givenName      String?
+    familyName     String?
+    picture        String?
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
   }
 
 
@@ -69,13 +69,11 @@ model Prayer {
   menStatus    MenPrayerStatus?  // Optional field for men's specific prayer statuses
   womenStatus  WomenPrayerStatus? // Optional field for women's specific prayer statuses
   performedAt  DateTime
-  notes        String?
   profile      Profile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId    String
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
-  prayerTime   DateTime      // Tracks the prayer time
-  notifiedAt   DateTime?     // Tracks when the user was notified
+  
 
   // Indexes for query optimization
   @@index([prayerType])
