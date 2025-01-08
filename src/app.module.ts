@@ -51,6 +51,7 @@ import { PrayertimingsModule } from './prayertimings/prayertimings.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+
     JwtService,
     TokenBlacklistProvider,
   ],

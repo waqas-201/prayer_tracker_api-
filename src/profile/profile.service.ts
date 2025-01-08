@@ -5,7 +5,10 @@ import { CreateProfileProvider } from './providers/createProfile.provider';
 @Injectable()
 export class ProfileService {
   constructor(private readonly createProfileProvider: CreateProfileProvider) {}
-  async create(createProfileDto: CreateProfileDto) {
-    return await this.createProfileProvider.createProfile(createProfileDto);
+  async create(createProfileDto: CreateProfileDto, user: any) {
+    return await this.createProfileProvider.createProfile(
+      createProfileDto,
+      user,
+    );
   }
 }

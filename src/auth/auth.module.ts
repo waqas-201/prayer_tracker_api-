@@ -25,6 +25,7 @@ import { LogoutProvider } from './providers/logout.provider';
 import { ForgotPasswordProvider } from './providers/forrgotPassword.provider';
 import { forgetPasswordVerifyProvider } from './providers/forgetPasswordVerify.provider';
 import { ResetPasswordProvider } from './providers/resetPassword.provider';
+import { CurrentUser } from '../decorators/currentUser';
 
 @Module({
   controllers: [AuthController],

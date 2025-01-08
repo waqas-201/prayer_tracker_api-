@@ -20,6 +20,7 @@ import { short } from './constents/throttle_config';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { CurrentUser } from '../decorators/currentUser';
 
 @Throttle({ ...short })
 @Controller('auth')
@@ -93,5 +94,10 @@ export class AuthController {
   @Post('/reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return await this.authService.resetPassword(resetPasswordDto);
+  }
+  @Version('1')
+  @Get('/me')
+  async me(@Req() req: Request, @CurrentUser() user: any) {
+    console.log(user, 'user in me auth contorle ');
   }
 }
