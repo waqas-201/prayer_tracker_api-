@@ -30,7 +30,7 @@ export class RegisterUserProvider {
       });
 
       if (user) {
-        throw new BadRequestException('user already eists ');
+        throw new BadRequestException('user already exists ');
       }
       //if use not exists lets hash user password
       const hashedPassword = await argon2.hash(registerUserDto.password);

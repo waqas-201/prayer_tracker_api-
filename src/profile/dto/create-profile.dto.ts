@@ -1,4 +1,4 @@
-import { Gender } from '@prisma/client';
+import { Gender, SchoolOfThought } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import * as DOMPurify from 'isomorphic-dompurify'; // Use * as import
 
@@ -57,6 +57,15 @@ const profileSchema = z.object({
     }),
   longitude: z.number(),
   latitude: z.number(),
+  country: z
+    .string()
+    .transform((input) => {
+      return input && typeof input === 'string'
+        ? DOMPurify.sanitize(input)
+        : input;
+    })
+    .optional(),
+  schoolOfThought: z.nativeEnum(SchoolOfThought).optional(),
 });
 
 export class CreateProfileDto extends createZodDto(profileSchema) {}
